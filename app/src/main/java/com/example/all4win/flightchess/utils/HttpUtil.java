@@ -2,7 +2,7 @@ package com.example.all4win.flightchess.utils;
 
 import android.util.Log;
 
-import com.example.all4win.flightchess.pRoom;
+import com.example.all4win.flightchess.Room;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,8 +50,8 @@ public class HttpUtil {
     private static final int Quit_Room_ID= 6;
     private static final int Start_Game_ID = 7;
     //通过url获得HttpGet对象
-    public static List<pRoom> queryRoom() {
-        List<pRoom> list = new ArrayList<pRoom>();
+    public static List<Room> queryRoom() {
+        List<Room> list = new ArrayList<Room>();
         String ans = "";
         try {
             URL theUrl = new URL(Room_URL);
@@ -80,7 +80,7 @@ public class HttpUtil {
                 jsonObject_temp = jsonArray.optJSONObject(i);
                 cur_temp = Integer.parseInt(jsonObject_temp.getString("PlayerNum"));
                 temp_room_id = Integer.parseInt(jsonObject_temp.getString("RoomId"));
-                list.add(new pRoom(cur_temp, temp_room_id));
+                list.add(new Room(cur_temp, temp_room_id));
             }
         } catch (JSONException e) {
             list.clear();

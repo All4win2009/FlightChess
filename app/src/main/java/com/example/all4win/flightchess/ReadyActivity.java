@@ -48,7 +48,7 @@ public class ReadyActivity extends AppCompatActivity {
         String method = bundle.getString("method");
         roomID = bundle.getString("room_id");
         isHost = false;
-        pos = 0;
+        pos = 1;
         String temp;
         player1 = (TextView)findViewById(R.id.player_1);
         player2 = (TextView)findViewById(R.id.player_2);
@@ -59,6 +59,7 @@ public class ReadyActivity extends AppCompatActivity {
             temp = sharedPreferences.getString("user_name", "No Player");
             player1.setText(temp);
             isHost = true;
+            pos = 1;
         }
         else if (method.equals("Enter")){
             temp = bundle.getString("Player1");
@@ -128,7 +129,7 @@ public class ReadyActivity extends AppCompatActivity {
                         else if (jsonObject.get("State").equals("2")){
                             Bundle gameBundle = new Bundle();
                             int position[] = {2,2,2,2};
-                            position[pos] = 1;
+                            position[pos-1] = 1;
                             gameBundle.putIntArray("Position", position);
                             gameBundle.putString("RoomId", roomID);
                             Intent intent = new Intent(ReadyActivity.this, GameActivity.class);

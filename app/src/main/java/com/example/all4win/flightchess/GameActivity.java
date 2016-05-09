@@ -50,8 +50,8 @@ public class GameActivity extends UnityPlayerActivity {
                     Log.e("hello", text);
 
                     JSONObject jsonObject = new JSONObject(text);
-                    if (jsonObject.has("State")){
-                        if (jsonObject.get("State").equals("3")){
+                    if (jsonObject.has("State")) {
+                        if (jsonObject.get("State").equals("3")) {
                             temp = temp + jsonObject.get("User") + ";" + jsonObject.get("Flight")
                                     + ";" + jsonObject.get("Num");
                             setNext(temp);
@@ -66,7 +66,8 @@ public class GameActivity extends UnityPlayerActivity {
             }
         });
 
-        startGame(position.toString());
+        String sg = position[0]+ ";" + position[1] + ";" + position[2] + ";" + + position[3];
+        startGame(sg);
         u3dLayout = (LinearLayout) findViewById(R.id.unityViewLayout);
         u3dLayout.addView(mUnityPlayer);
         mUnityPlayer.requestFocus();
@@ -83,22 +84,25 @@ public class GameActivity extends UnityPlayerActivity {
         }
     }
     public void startGame(String s){
-        UnityPlayer.UnitySendMessage("Manager", "startGame", "1;0;0;0");
+        UnityPlayer.UnitySendMessage("Manager", "startGame", s);
     }
 
     public void finishGame(){
         //被调用结束游戏
+        u3dLayout.removeAllViews();
+
         GameActivity.this.finish();
     }
 
     public void SendNext(int user, int flight, int num){
         //HTTP上传 被调用
+        Log.w("game", "我被调用了");
         SendTask sendTask = new SendTask(user, flight, num);
         sendTask.execute();
     }
 
     public void setNext(String s){
-        UnityPlayer.UnitySendMessage("Manager", "setNext", s);
+        UnityPlayer.UnitySendMessage("Manager", "SetNext", s);
     }
 
     private class SendTask extends AsyncTask<String, Integer, Void> {

@@ -13,16 +13,16 @@ import java.util.List;
 /**
  * Created by All4win on 3/31/16.
  */
-public class RoomAdapter extends ArrayAdapter<pRoom> {
+public class RoomAdapter extends ArrayAdapter<Room> {
     private int resource;
-    public RoomAdapter(Context context, int ResourceId, List<pRoom> objects) {
+    public RoomAdapter(Context context, int ResourceId, List<Room> objects) {
         super(context, ResourceId, objects);
         resource = ResourceId;
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
         LinearLayout li;
-        final pRoom pR = getItem(position);
+        final Room pR = getItem(position);
         if(convertView == null) {
             li = new LinearLayout(getContext());
             LayoutInflater inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);

@@ -29,7 +29,7 @@ public class RoomActivity extends AppCompatActivity implements SwipeRefreshLayou
     private SharedPreferences.Editor editor;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ListView listView;
-    private List<pRoom> roomList;
+    private List<Room> roomList;
     private Button button;
     private Button quitButton;
     @Override
@@ -64,7 +64,7 @@ public class RoomActivity extends AppCompatActivity implements SwipeRefreshLayou
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                pRoom room = (pRoom) parent.getItemAtPosition(position);
+                Room room = (Room) parent.getItemAtPosition(position);
                 String room_id = room.getRoomNumber() + "";
                 EnterTask enterTask = new EnterTask(room_id);
                 enterTask.execute();
@@ -76,19 +76,19 @@ public class RoomActivity extends AppCompatActivity implements SwipeRefreshLayou
     }
 
     //刷新房间列表
-    private class MyAsyncTask extends AsyncTask<String , Integer, List<pRoom>> {
+    private class MyAsyncTask extends AsyncTask<String , Integer, List<Room>> {
 
         @Override
-        protected List<pRoom> doInBackground(String... params) {
+        protected List<Room> doInBackground(String... params) {
             return HttpUtil.queryRoom();
         }
 
         @Override
-        protected void onPostExecute(List<pRoom> l) {
+        protected void onPostExecute(List<Room> l) {
             super.onPostExecute(l);
 
-            if (l.size() != 0){
-                roomList = new ArrayList<pRoom>(l);
+            if (l.size() >= 0){
+                roomList = new ArrayList<Room>(l);
                 RoomAdapter roomAdapter = new RoomAdapter(RoomActivity.this, R.layout.room_item, roomList);
                 listView.setAdapter(roomAdapter);
             }

@@ -3,13 +3,13 @@ package com.example.all4win.flightchess;
 /**
  * Created by All4win on 3/31/16.
  */
-public class pRoom {
+public class Room {
     private String roomName;
     private int currentNumber;
     private int roomNumber;
     private String state;
     private int host;
-    public pRoom(int cur, int roomNum){
+    public Room(int cur, int roomNum){
         host = -1;
         currentNumber = cur;
         roomNumber = roomNum;

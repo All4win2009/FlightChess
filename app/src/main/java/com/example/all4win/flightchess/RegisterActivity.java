@@ -81,6 +81,13 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         ValidateUserInfo validateUserInfo = new ValidateUserInfo();
 
         // Check for a valid password, if the user entered one.
+        if (!TextUtils.isEmpty(name) && !validateUserInfo.isNameValid(name)) {
+            mUserView.setError(getString(R.string.error_invalid_password));
+            focusView = mUserView;
+            cancel = true;
+        }
+
+        // Check for a valid password, if the user entered one.
         if (!TextUtils.isEmpty(password) && !validateUserInfo.isPasswordValid(password)) {
             mPasswordView.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;

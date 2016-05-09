@@ -37,17 +37,7 @@
                     android:background="@drawable/login_btn"
                     android:text="创建游戏房间"
                     android:layout_gravity="center_horizontal" />
-                <Button
-                    android:id="@+id/quit_login"
-                    style="?android:textAppearanceSmall"
-                    android:layout_width="200dp"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/grey_0"
-                    android:layout_marginTop="2dp"
 
-                    android:background="@drawable/login_btn"
-                    android:text="退出登录"
-                    android:layout_gravity="center_horizontal" />
             </LinearLayout>
 
 

@@ -52,9 +52,12 @@ public class GameActivity extends UnityPlayerActivity {
                     JSONObject jsonObject = new JSONObject(text);
                     if (jsonObject.has("State")) {
                         if (jsonObject.get("State").equals("3")) {
-                            temp = temp + jsonObject.get("User") + ";" + jsonObject.get("Flight")
-                                    + ";" + jsonObject.get("Num");
-                            setNext(temp);
+                            temp = temp + jsonObject.get("User") + ";" + jsonObject.get("Num");
+                            SetNextDice(temp);
+                        }
+                        else if (jsonObject.get("State").equals("4")) {
+                            temp = temp + jsonObject.get("User") + ";" + jsonObject.get("Flight");
+                            SetNextPlane(temp);
                         }
                     }
 
@@ -89,20 +92,32 @@ public class GameActivity extends UnityPlayerActivity {
 
     public void finishGame(){
         //被调用结束游戏
-        u3dLayout.removeAllViews();
-
+        String temp = "11";
+        UnityPlayer.UnitySendMessage("Manager", "quit", temp);
         GameActivity.this.finish();
     }
 
-    public void SendNext(int user, int flight, int num){
+    public void SendNextDice(int user, int num){
         //HTTP上传 被调用
-        Log.w("game", "我被调用了");
-        SendTask sendTask = new SendTask(user, flight, num);
+        Log.w("game", "SendNextDice被调用了");
+        SendTask sendTask = new SendTask(user, 0, num, 3);
         sendTask.execute();
     }
 
-    public void setNext(String s){
-        UnityPlayer.UnitySendMessage("Manager", "SetNext", s);
+    public void SendNextPlane(int user, int flight){
+        //HTTP上传 被调用
+        Log.w("game", "SendNextPlane被调用了");
+        SendTask sendTask = new SendTask(user, flight, 0, 4);
+        sendTask.execute();
+    }
+
+
+    public void SetNextDice(String s){
+        UnityPlayer.UnitySendMessage("Manager", "SetNextDice", s);
+    }
+
+    public void SetNextPlane(String s){
+        UnityPlayer.UnitySendMessage("Manager", "SetNextPlane", s);
     }
 
     private class SendTask extends AsyncTask<String, Integer, Void> {
@@ -110,10 +125,12 @@ public class GameActivity extends UnityPlayerActivity {
         private int user;
         private int flight;
         private int num;
-        SendTask(int a, int b, int c){
+        private int state;
+        SendTask(int a, int b, int c, int d){
             user = a;
             flight = b;
             num = c;
+            state = d;
         }
         @Override
         protected Void doInBackground(String... params) {
@@ -122,6 +139,7 @@ public class GameActivity extends UnityPlayerActivity {
             map.put("User", user+"");
             map.put("Flight", flight+"");
             map.put("Num", num + "");
+            map.put("State", state + "");
             HttpUtil.submitPostDataForRoom(map, "utf-8",5);
             return null;
         }

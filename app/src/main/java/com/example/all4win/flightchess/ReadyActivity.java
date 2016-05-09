@@ -9,7 +9,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.all4win.flightchess.utils.CheckNetwork;
@@ -20,20 +20,23 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ReadyActivity extends AppCompatActivity {
     private Button button;
-    private TextView player1;
-    private TextView player2;
-    private TextView player3;
-    private TextView player4;
+
     private SharedPreferences sharedPreferences;
     private String roomID;
     private boolean isHost;
 
     private int pos;
+
+    private ListView listView;
+    private List<Player> playerList;
+    private PlayerAdapter playerAdapter;
 
     private MessageConsumer mConsumer;
 
@@ -50,39 +53,62 @@ public class ReadyActivity extends AppCompatActivity {
         isHost = false;
         pos = 1;
         String temp;
-        player1 = (TextView)findViewById(R.id.player_1);
-        player2 = (TextView)findViewById(R.id.player_2);
-        player3 = (TextView)findViewById(R.id.player_3);
-        player4 = (TextView)findViewById(R.id.player_4);
+
+        button = (Button)findViewById(R.id.start_button);
+        listView = (ListView)findViewById(R.id.player_listview);
+        playerList = new ArrayList<>();
         sharedPreferences = getSharedPreferences("User", MODE_PRIVATE);
         if (method.equals("Create")){
+            playerList.clear();
             temp = sharedPreferences.getString("user_name", "No Player");
-            player1.setText(temp);
+            Player tempPlayer = new Player(0, temp, true, 1);
+            playerList.add(tempPlayer);
+            playerAdapter = new PlayerAdapter(ReadyActivity.this, R.layout.player_item, playerList);
+            listView.setAdapter(playerAdapter);
             isHost = true;
             pos = 1;
         }
         else if (method.equals("Enter")){
+            List<String> playerName = new ArrayList<>();
             temp = bundle.getString("Player1");
-            player1.setText(temp);
+            playerName.add(temp);
             temp = bundle.getString("Player2");
-            player2.setText(temp);
+            playerName.add(temp);
             temp = bundle.getString("Player3");
-            player3.setText(temp);
+            playerName.add(temp);
             temp = bundle.getString("Player4");
-            player4.setText(temp);
+            playerName.add(temp);
             temp = bundle.getString("Host");
             if (temp.equals(sharedPreferences.getString("user_name", "-1"))){
                 isHost = true;
             }
+            playerList.clear();
+            for (int i = 0; i <= 3; i++){
+                if (playerName.get(i).equals(temp)) {
+                    Player player = new Player(i, playerName.get(i), true, i+1);
+                    playerList.add(player);
+                }
+                else if (!playerName.get(i).equals("No Player")){
+                    Player player = new Player(i, playerName.get(i), false, i+1);
+                    playerList.add(player);
+                }
+            }
+            playerAdapter = new PlayerAdapter(ReadyActivity.this, R.layout.player_item, playerList);
+            listView.setAdapter(playerAdapter);
+
             temp = bundle.getString("Position");
             pos = Integer.parseInt(temp);
+
+            if (!isHost){
+                button.setVisibility(View.INVISIBLE);
+            }
         }
 
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         if(actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        button = (Button)findViewById(R.id.start_button);
+
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -99,7 +125,7 @@ public class ReadyActivity extends AppCompatActivity {
         });
         //PollingUtils.startPollingService(ReadyActivity.this, 1, PollingService.class, PollingService.ACTION);
 
-        mConsumer = new MessageConsumer("172.18.40.94", "amq.fanout", "fanout");
+        mConsumer = new MessageConsumer("172.18.40.94", "amq.fanout", "direct");
         new consumerconnect().execute();
 
         mConsumer.setOnReceiveMessageHandler(new MessageConsumer.OnReceiveMessageHandler() {
@@ -114,21 +140,47 @@ public class ReadyActivity extends AppCompatActivity {
                     JSONObject jsonObject = new JSONObject(text);
                     if (jsonObject.has("State")){
                         if (jsonObject.get("State").equals("1")){
-                            player1.setText(jsonObject.get("Player1").toString());
-                            player2.setText(jsonObject.get("Player2").toString());
-                            player3.setText(jsonObject.get("Player3").toString());
-                            player4.setText(jsonObject.get("Player4").toString());
+                            List<String> playerName = new ArrayList<>();
+                            String tempPlayer;
+                            tempPlayer = jsonObject.get("Player1").toString();
+                            playerName.add(tempPlayer);
+                            tempPlayer = jsonObject.get("Player2").toString();
+                            playerName.add(tempPlayer);
+                            tempPlayer = jsonObject.get("Player3").toString();
+                            playerName.add(tempPlayer);
+                            tempPlayer = jsonObject.get("Player4").toString();
+                            playerName.add(tempPlayer);
                             temp = jsonObject.get("Host").toString();
                             if (temp.equals(sharedPreferences.getString("user_name", "-1"))){
                                 isHost = true;
+                                button.setVisibility(View.VISIBLE);
                             }
                             else {
                                 isHost = false;
+                                button.setVisibility(View.INVISIBLE);
                             }
+                            playerList.clear();
+                            for (int i = 0; i <= 3; i++){
+                                if (playerName.get(i).equals(temp)) {
+                                    Player player = new Player(i, playerName.get(i), true, i+1);
+                                    playerList.add(player);
+                                }
+                                else if (!playerName.get(i).equals("No Player")){
+                                    Player player = new Player(i, playerName.get(i), false, i+1);
+                                    playerList.add(player);
+                                }
+                            }
+                            playerAdapter.notifyDataSetChanged();
+
                         }
                         else if (jsonObject.get("State").equals("2")){
                             Bundle gameBundle = new Bundle();
-                            int position[] = {2,2,2,2};
+                            int position[] = {3,3,3,3};
+
+                            int len = playerList.size();
+                            for (int i = 0; i < len; i++){
+                                position[playerList.get(i).getId()] = 2;
+                            }
                             position[pos-1] = 1;
                             gameBundle.putIntArray("Position", position);
                             gameBundle.putString("RoomId", roomID);

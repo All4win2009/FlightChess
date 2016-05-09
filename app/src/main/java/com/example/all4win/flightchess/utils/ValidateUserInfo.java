@@ -13,14 +13,13 @@ public class ValidateUserInfo {
     }
 
     public static boolean isNameValid(String name){
-        String ePattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]$";
-        java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
-        java.util.regex.Matcher m = p.matcher(name);
-        return m.matches();
+        int len = name.length();
+        return (len >= 3 && len <= 10);
     }
 
     public static boolean isPasswordValid(String password) {
         //TODO change for your own logic
-        return password.length() >= 6;
+        int len = password.length();
+        return len >= 6;
     }
 }

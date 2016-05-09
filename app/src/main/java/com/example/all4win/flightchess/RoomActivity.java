@@ -10,6 +10,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -27,39 +30,32 @@ import java.util.Map;
 public class RoomActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener{
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
+
     private SwipeRefreshLayout swipeRefreshLayout;
+
     private ListView listView;
     private List<Room> roomList;
-    private Button button;
-    private Button quitButton;
+
+    private Button createButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room);
         sharedPreferences = getSharedPreferences("User", MODE_PRIVATE);
         editor = sharedPreferences.edit();
-        button = (Button)findViewById(R.id.create_room_button);
-        button.setOnClickListener(new View.OnClickListener() {
+
+        createButton = (Button)findViewById(R.id.create_room_button);
+        createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 CreateTask createTask = new CreateTask();
                 createTask.execute();
             }
         });
-        quitButton = (Button)findViewById(R.id.quit_login);
-        quitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editor = sharedPreferences.edit();
-                editor.putBoolean("login_state", false);
-                editor.commit();
-                Intent intent = new Intent(RoomActivity.this, LoginActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
+
         swipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swipe_container);
         swipeRefreshLayout.setOnRefreshListener(this);
+
         listView = (ListView)findViewById(R.id.room_list_view);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -70,11 +66,35 @@ public class RoomActivity extends AppCompatActivity implements SwipeRefreshLayou
                 enterTask.execute();
             }
         });
+
         MyAsyncTask myAsyncTask = new MyAsyncTask();
         myAsyncTask.execute();
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.quit_login_menu:
+                editor = sharedPreferences.edit();
+                editor.putBoolean("login_state", false);
+                editor.commit();
+                Intent intent = new Intent(RoomActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
     //刷新房间列表
     private class MyAsyncTask extends AsyncTask<String , Integer, List<Room>> {
 
@@ -95,6 +115,7 @@ public class RoomActivity extends AppCompatActivity implements SwipeRefreshLayou
         }
     }
 
+    //下拉刷新,此处有冲突
     public void onRefresh() {
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -142,7 +163,7 @@ public class RoomActivity extends AppCompatActivity implements SwipeRefreshLayou
         }
     }
 
-
+    //进入房间
     private class EnterTask extends AsyncTask<String , Integer, Map<String,String>> {
         String myRoom;
 

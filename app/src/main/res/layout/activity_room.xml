@@ -1,0 +1,58 @@
+<android.support.v4.widget.SwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:gravity="center_horizontal"
+    android:orientation="vertical" android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:id="@+id/swipe_container"
+    android:paddingTop="@dimen/activity_vertical_margin" tools:context=".RoomActivity">
+
+
+
+            <LinearLayout
+                android:id="@+id/room_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:weightSum="1">
+
+                <ListView
+                    android:id="@+id/room_list_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:layout_weight="1">
+
+                </ListView>
+
+                <Button
+                    android:id="@+id/create_room_button"
+                    style="?android:textAppearanceSmall"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/grey_0"
+                    android:layout_marginTop="2dp"
+
+                    android:background="@drawable/login_btn"
+                    android:text="创建游戏房间"
+                    android:layout_gravity="center_horizontal" />
+                <Button
+                    android:id="@+id/quit_login"
+                    style="?android:textAppearanceSmall"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/grey_0"
+                    android:layout_marginTop="2dp"
+
+                    android:background="@drawable/login_btn"
+                    android:text="退出登录"
+                    android:layout_gravity="center_horizontal" />
+            </LinearLayout>
+
+
+
+
+
+
+</android.support.v4.widget.SwipeRefreshLayout>

@@ -88,7 +88,7 @@ public class ReadyActivity extends AppCompatActivity {
                     Player player = new Player(i, playerName.get(i), true, i+1);
                     playerList.add(player);
                 }
-                else if (!playerName.get(i).equals("No Player")){
+                else if (!playerName.get(i).equals("NoPlayer")){
                     Player player = new Player(i, playerName.get(i), false, i+1);
                     playerList.add(player);
                 }
@@ -125,7 +125,7 @@ public class ReadyActivity extends AppCompatActivity {
         });
         //PollingUtils.startPollingService(ReadyActivity.this, 1, PollingService.class, PollingService.ACTION);
 
-        mConsumer = new MessageConsumer("172.18.40.94", "amq.fanout", "direct");
+        mConsumer = new MessageConsumer("172.18.40.94", "amq.direct", "direct", roomID);
         new consumerconnect().execute();
 
         mConsumer.setOnReceiveMessageHandler(new MessageConsumer.OnReceiveMessageHandler() {
@@ -165,7 +165,7 @@ public class ReadyActivity extends AppCompatActivity {
                                     Player player = new Player(i, playerName.get(i), true, i+1);
                                     playerList.add(player);
                                 }
-                                else if (!playerName.get(i).equals("No Player")){
+                                else if (!playerName.get(i).equals("NoPlayer")){
                                     Player player = new Player(i, playerName.get(i), false, i+1);
                                     playerList.add(player);
                                 }
@@ -178,10 +178,12 @@ public class ReadyActivity extends AppCompatActivity {
                             int position[] = {3,3,3,3};
 
                             int len = playerList.size();
+                            int gap = 0;
+                            if (len == 2) gap = 1;
                             for (int i = 0; i < len; i++){
-                                position[playerList.get(i).getId()] = 2;
+                                position[playerList.get(i).getId() + gap] = 2;
                             }
-                            position[pos-1] = 1;
+                            position[pos - 1 + gap] = 1;
                             gameBundle.putIntArray("Position", position);
                             gameBundle.putString("RoomId", roomID);
                             Intent intent = new Intent(ReadyActivity.this, GameActivity.class);

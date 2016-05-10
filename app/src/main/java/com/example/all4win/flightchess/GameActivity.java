@@ -24,7 +24,6 @@ import java.util.Map;
 public class GameActivity extends UnityPlayerActivity {
     private LinearLayout u3dLayout;
     private String RoomId;
-
     private MessageConsumer mConsumer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +36,7 @@ public class GameActivity extends UnityPlayerActivity {
         position = bundle.getIntArray("Position");
         RoomId = bundle.getString("RoomId");
 
-        mConsumer = new MessageConsumer("172.18.40.94", "amq.fanout", "fanout");
+        mConsumer = new MessageConsumer("172.18.40.94", "amq.direct", "direct", RoomId);
         new consumerconnect().execute();
 
         mConsumer.setOnReceiveMessageHandler(new MessageConsumer.OnReceiveMessageHandler() {

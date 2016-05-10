@@ -17,8 +17,10 @@ import java.io.IOException;
  */
 public class MessageConsumer extends  IConnectToRabbitMQ{
 
-    public MessageConsumer(String server, String exchange, String exchangeType) {
+    private String room_id;
+    public MessageConsumer(String server, String exchange, String exchangeType, String rid) {
         super(server, exchange, exchangeType);
+        room_id = rid;
     }
 
     //The Queue name for this consumer
@@ -82,7 +84,7 @@ public class MessageConsumer extends  IConnectToRabbitMQ{
             if (MyExchangeType == "fanout")
                 AddBinding("");//fanout has default binding
             else{
-                AddBinding(mQueue+"Key");
+                AddBinding(room_id);
             }
             Running = true;
             mConsumeHandler.post(mConsumeRunner);

@@ -164,7 +164,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             if (m.get("State").equals("Yes")){
                 username = m.get("UserName");
                 userId = m.get("UserId");
-                Toast.makeText(LoginActivity.this, "登录成功,欢迎使用", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(LoginActivity.this, "登录成功,欢迎使用", Toast.LENGTH_SHORT).show();
                 login_state = true;
                 editor.putBoolean("login_state", login_state);
                 editor.putString("user_id", userId);

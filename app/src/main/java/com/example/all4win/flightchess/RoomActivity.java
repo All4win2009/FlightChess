@@ -145,10 +145,10 @@ public class RoomActivity extends AppCompatActivity implements SwipeRefreshLayou
             boolean flag = CheckNetwork.isConnected(RoomActivity.this);
 
             if (!flag ||m.get("State").equals("Error")){
-                Toast.makeText(RoomActivity.this, "网络异常", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RoomActivity.this, "Network Error", Toast.LENGTH_SHORT).show();
             }
             if (m.get("State").equals("Yes")){
-                Toast.makeText(RoomActivity.this, "创建成功", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(RoomActivity.this, "创建成功", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(RoomActivity.this, ReadyActivity.class);
                 //TODO
                 Bundle bundle = new Bundle();
@@ -158,7 +158,7 @@ public class RoomActivity extends AppCompatActivity implements SwipeRefreshLayou
                 RoomActivity.this.startActivity(intent);
             }
             else if (m.get("State").equals("No")){
-                Toast.makeText(RoomActivity.this, "创建失败", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RoomActivity.this, "The request is not allowed", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -185,10 +185,10 @@ public class RoomActivity extends AppCompatActivity implements SwipeRefreshLayou
             boolean flag = CheckNetwork.isConnected(RoomActivity.this);
 
             if (!flag ||m.get("State").equals("Error")){
-                Toast.makeText(RoomActivity.this, "网络异常", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RoomActivity.this, "Network Error", Toast.LENGTH_SHORT).show();
             }
             if (m.get("State").equals("Yes")){
-                Toast.makeText(RoomActivity.this, "加入成功", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(RoomActivity.this, "加入成功", Toast.LENGTH_SHORT).show();
                 Bundle bundle = new Bundle();
                 bundle.putString("room_id",m.get("RoomId"));
                 bundle.putString("Player1", m.get("Player1"));
@@ -203,7 +203,7 @@ public class RoomActivity extends AppCompatActivity implements SwipeRefreshLayou
                 RoomActivity.this.startActivity(intent);
             }
             else if (m.get("State").equals("No")){
-                Toast.makeText(RoomActivity.this, "加入失败", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RoomActivity.this, "The request is not allowed", Toast.LENGTH_SHORT).show();
             }
         }
     }

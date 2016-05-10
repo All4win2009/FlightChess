@@ -80,12 +80,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
         ValidateUserInfo validateUserInfo = new ValidateUserInfo();
 
-        // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(name) && !validateUserInfo.isNameValid(name)) {
-            mUserView.setError(getString(R.string.error_invalid_password));
-            focusView = mUserView;
-            cancel = true;
-        }
 
         // Check for a valid password, if the user entered one.
         if (!TextUtils.isEmpty(password) && !validateUserInfo.isPasswordValid(password)) {
@@ -98,6 +92,13 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         if (TextUtils.isEmpty(name)) {
             mUserView.setError(getString(R.string.error_field_required));
             focusView = mUserView;
+            cancel = true;
+        }
+
+        // Check for a valid email address.
+        if (TextUtils.isEmpty(password)) {
+            mPasswordView.setError(getString(R.string.error_field_required));
+            focusView = mPasswordView;
             cancel = true;
         }
 
@@ -157,7 +158,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             String userId = "0";
             boolean flag = CheckNetwork.isConnected(RegisterActivity.this);
             if (!flag || m.get("State").equals("Error")) {
-                Toast.makeText(RegisterActivity.this, "网络异常", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RegisterActivity.this, "Network Error", Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -175,7 +176,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 RegisterActivity.this.startActivity(intent);
                 RegisterActivity.this.finish();
             }else if (m.get("State").equals("No")){
-                Toast.makeText(RegisterActivity.this, "注册失败,用户名已被注册", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RegisterActivity.this, "The username has been used", Toast.LENGTH_SHORT).show();
             }
         }
 

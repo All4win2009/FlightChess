@@ -117,10 +117,6 @@ public class ReadyActivity extends AppCompatActivity {
                     StartTask startTask = new StartTask();
                     startTask.execute();
                 }
-                else {
-                    Toast.makeText(ReadyActivity.this, "只有房主才能开始游戏~", Toast.LENGTH_SHORT).show();
-                }
-
             }
         });
         //PollingUtils.startPollingService(ReadyActivity.this, 1, PollingService.class, PollingService.ACTION);
@@ -179,7 +175,7 @@ public class ReadyActivity extends AppCompatActivity {
 
                             int len = playerList.size();
                             int gap = 0;
-                            if (len == 2) gap = 1;
+                            //if (len == 2) gap = 1;
                             for (int i = 0; i < len; i++){
                                 position[playerList.get(i).getId() + gap] = 2;
                             }
@@ -235,13 +231,14 @@ public class ReadyActivity extends AppCompatActivity {
 
             boolean flag = CheckNetwork.isConnected(ReadyActivity.this);
             if (!flag || m.get("State").equals("Error")) {
-                Toast.makeText(ReadyActivity.this, "网络异常", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ReadyActivity.this, "Network Error", Toast.LENGTH_SHORT).show();
                 return;
             }
             if (m.get("State").equals("Yes")){
                 ReadyActivity.this.finish();
             }else if (m.get("State").equals("No")){
-                Toast.makeText(ReadyActivity.this, "退出失败", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(ReadyActivity.this, "退出失败", Toast.LENGTH_SHORT).show();
+                return;
             }
         }
     }
@@ -293,13 +290,13 @@ public class ReadyActivity extends AppCompatActivity {
 
             boolean flag = CheckNetwork.isConnected(ReadyActivity.this);
             if (!flag || m.get("State").equals("Error")) {
-                Toast.makeText(ReadyActivity.this, "网络异常", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ReadyActivity.this, "Network Error", Toast.LENGTH_SHORT).show();
                 return;
             }
-            if (m.get("State").equals("Yes")) {
-                Toast.makeText(ReadyActivity.this, "开始游戏", Toast.LENGTH_SHORT).show();
+            else if (m.get("State").equals("Yes")) {
+                return;
             }else if (m.get("State").equals("No")){
-                Toast.makeText(ReadyActivity.this, "服务器拒绝了你的游戏请求", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ReadyActivity.this, "The request is not allowed", Toast.LENGTH_SHORT).show();
             }
         }
     }

@@ -100,6 +100,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             cancel = true;
         }
 
+        if (TextUtils.isEmpty(password)) {
+            mPasswordView.setError(getString(R.string.error_field_required));
+            focusView = mPasswordView;
+            cancel = true;
+        }
+
         if (cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
@@ -156,7 +162,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             String userId = "0";
             boolean flag = CheckNetwork.isConnected(LoginActivity.this);
             if (!flag || m.get("State").equals("Error")) {
-                Toast.makeText(LoginActivity.this, "网络异常", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "Network Error", Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -174,7 +180,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 LoginActivity.this.startActivity(intent);
                 LoginActivity.this.finish();
             }else if (m.get("State").equals("No")){
-                Toast.makeText(LoginActivity.this, "登录失败,用户名or密码错误", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "Username or password is not correct", Toast.LENGTH_SHORT).show();
             }
         }
 

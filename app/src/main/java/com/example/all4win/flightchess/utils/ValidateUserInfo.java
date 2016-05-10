@@ -20,7 +20,6 @@ public class ValidateUserInfo {
     public static boolean isPasswordValid(String password) {
         //TODO change for your own logic
         int len = password.length();
-        if (password == null||password.equals(""))return false;
         return len >= 6;
     }
 }

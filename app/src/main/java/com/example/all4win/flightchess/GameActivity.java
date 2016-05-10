@@ -1,11 +1,14 @@
 package com.example.all4win.flightchess;
 
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
+import com.example.all4win.flightchess.utils.CheckNetwork;
 import com.example.all4win.flightchess.utils.HttpUtil;
 import com.example.all4win.flightchess.utils.MessageConsumer;
 import com.unity3d.player.UnityPlayer;
@@ -25,6 +28,8 @@ public class GameActivity extends UnityPlayerActivity {
     private LinearLayout u3dLayout;
     private String RoomId;
     private MessageConsumer mConsumer;
+    private SharedPreferences sharedPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,7 +40,7 @@ public class GameActivity extends UnityPlayerActivity {
         int position[];
         position = bundle.getIntArray("Position");
         RoomId = bundle.getString("RoomId");
-
+        sharedPreferences = getSharedPreferences("User", MODE_PRIVATE);
         mConsumer = new MessageConsumer("172.18.40.94", "amq.direct", "direct", RoomId);
         new consumerconnect().execute();
 
@@ -93,6 +98,8 @@ public class GameActivity extends UnityPlayerActivity {
         //被调用结束游戏
         String temp = "11";
         UnityPlayer.UnitySendMessage("Manager", "quit", temp);
+        QuitTask quitTask = new QuitTask();
+        quitTask.execute();
         GameActivity.this.finish();
     }
 
@@ -165,6 +172,13 @@ public class GameActivity extends UnityPlayerActivity {
 
 
     @Override
+    protected void onDestroy() {
+        //PollingUtils.stopPollingService(ReadyActivity.this, PollingService.class,PollingService.ACTION);
+
+        super.onDestroy();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         new consumerconnect().execute();
@@ -174,5 +188,33 @@ public class GameActivity extends UnityPlayerActivity {
     protected void onPause() {
         super.onPause();
         mConsumer.dispose();
+    }
+
+    private class QuitTask extends AsyncTask<String , Integer, Map<String,String>> {
+
+        @Override
+        protected Map<String,String> doInBackground(String... params) {
+            Map<String, String> map = new HashMap<>();
+            map.put("RoomId", RoomId);
+            map.put("UserId", sharedPreferences.getString("user_id", "-1"));
+            return HttpUtil.submitPostDataForRoom(map, "utf-8", 6);
+        }
+
+        @Override
+        protected void onPostExecute(Map<String,String> m) {
+            super.onPostExecute(m);
+
+            boolean flag = CheckNetwork.isConnected(GameActivity.this);
+            if (!flag || m.get("State").equals("Error")) {
+                Toast.makeText(GameActivity.this, "Network Error", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (m.get("State").equals("Yes")){
+                GameActivity.this.finish();
+            }else if (m.get("State").equals("No")){
+                //Toast.makeText(ReadyActivity.this, "退出失败", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
     }
 }

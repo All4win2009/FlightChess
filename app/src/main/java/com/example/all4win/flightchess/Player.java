@@ -14,7 +14,7 @@ public class Player {
         user_name = u;
         isHost = is;
         if (img == 1){
-            img_id = R.drawable.player2;
+            img_id = R.drawable.player1;
         }
         else if (img == 2){
             img_id = R.drawable.player4;

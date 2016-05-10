@@ -25,6 +25,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:design:23.1.1'
     compile 'org.java-websocket:Java-WebSocket:1.3.0'
-    compile files('libs/unity-classes.jar')
     compile files('libs/rabbitmq-client.jar')
+    compile files('libs/unity-classes.jar')
 }

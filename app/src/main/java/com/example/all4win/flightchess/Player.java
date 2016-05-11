@@ -27,7 +27,7 @@ public class Player {
         }
 
         if (is){
-            host = "房主";
+            host = "Host";
         }
         else {
             host = "";

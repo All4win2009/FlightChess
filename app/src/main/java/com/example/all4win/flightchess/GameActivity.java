@@ -170,14 +170,6 @@ public class GameActivity extends UnityPlayerActivity {
 
     }
 
-
-    @Override
-    protected void onDestroy() {
-        //PollingUtils.stopPollingService(ReadyActivity.this, PollingService.class,PollingService.ACTION);
-
-        super.onDestroy();
-    }
-
     @Override
     protected void onResume() {
         super.onResume();

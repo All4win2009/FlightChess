@@ -174,22 +174,23 @@ public class ReadyActivity extends AppCompatActivity {
                             int position[] = {3,3,3,3};
 
                             int len = playerList.size();
-                            int gap = 0;
-                            //if (len == 2) gap = 1;
+
                             if (len != 2){
                                 for (int i = 0; i < len; i++){
                                     position[playerList.get(i).getId()] = 2;
                                 }
+                                position[pos - 1] = 1;
                             }
                             else {
                                 position[0] = 2;
                                 position[2] = 2;
+                                if (pos == 1){
+                                    position[0] = 1;
+                                }else{
+                                    position[2] = 1;
+                                }
                             }
-                            if (pos == 1){
-                                position[0] = 1;
-                            }else{
-                                position[2] = 1;
-                            }
+
                             gameBundle.putIntArray("Position", position);
                             gameBundle.putString("RoomId", roomID);
                             Intent intent = new Intent(ReadyActivity.this, GameActivity.class);
